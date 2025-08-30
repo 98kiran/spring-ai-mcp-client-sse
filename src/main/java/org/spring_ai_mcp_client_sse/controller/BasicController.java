@@ -15,7 +15,13 @@ public class BasicController {
     public BasicController(ChatClient.Builder chatClientBuilder, ToolCallbackProvider tools) {
         this.chatClient = chatClientBuilder
                 .defaultSystem(
-                        "Please prioritise information from context for answering queries.  Give Short concise and to the point answers."
+                        """
+            You are a helpful assistant.
+            Decide WHETHER to call tools.
+            - Call getStockPrice ONLY when the user explicitly asks for a stock price/quote or gives a clear ticker/company.
+            - For greetings, capability questions, or casual chat, DO NOT call any tools; just reply normally.
+            - Never guess a ticker from unrelated text.
+            """
                         )
                 .defaultToolCallbacks(tools)
                 .build();
