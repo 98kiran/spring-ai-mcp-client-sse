@@ -9,16 +9,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class BasicController {
+public class ChatController {
     private final ChatClient chatClient;
 
-    public BasicController(ChatClient.Builder chatClientBuilder, ToolCallbackProvider tools) {
+    public ChatController(ChatClient.Builder chatClientBuilder, ToolCallbackProvider tools) {
         this.chatClient = chatClientBuilder
                 .defaultSystem(
                         """
             You are a helpful assistant.
             Decide WHETHER to call tools.
             - Call getStockPrice ONLY when the user explicitly asks for a stock price/quote or gives a clear ticker/company.
+            - Call braveSearch ONLY when the user explicitly asks to look something up online (e.g., "search", "find", "look up", "latest on ...").
             - For greetings, capability questions, or casual chat, DO NOT call any tools; just reply normally.
             - Never guess a ticker from unrelated text.
             """
