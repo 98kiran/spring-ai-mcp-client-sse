@@ -2,160 +2,539 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Stunning Chat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Interface</title>
     <style>
         :root {
-          --accent: #4cafef;
-          --accent-darker: #3a8edb;
+          --primary: #6366f1;
+          --primary-hover: #5b21b6;
+          --secondary: #8b5cf6;
+          --background: #0a0a0a;
+          --surface: #111827;
+          --surface-light: #1f2937;
+          --text: #f9fafb;
+          --text-muted: #9ca3af;
+          --border: #374151;
+          --success: #10b981;
+          --warning: #f59e0b;
+          --error: #ef4444;
+          --glass: rgba(255, 255, 255, 0.05);
+          --glass-border: rgba(255, 255, 255, 0.1);
+          --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+          --glow: 0 0 20px rgba(99, 102, 241, 0.3);
         }
+
+        [data-theme="light"] {
+          --background: #f8fafc;
+          --surface: #ffffff;
+          --surface-light: #f1f5f9;
+          --text: #1e293b;
+          --text-muted: #64748b;
+          --border: #e2e8f0;
+          --glass: rgba(255, 255, 255, 0.8);
+          --glass-border: rgba(0, 0, 0, 0.1);
+          --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+          --glow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+
+        [data-theme="light"] body {
+          background-image:
+            radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.03) 0%, transparent 50%);
+        }
+
+        * {
+          box-sizing: border-box;
+        }
+
         body {
           margin: 0;
-          font-family: "Segoe UI", sans-serif;
-          background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-          color: #fff;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          background: var(--background);
+          background-image:
+            radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+          color: var(--text);
           display: flex;
           flex-direction: column;
           height: 100vh;
+          overflow: hidden;
         }
+
         header {
-          padding: 10px 20px;
-          background: rgba(0, 0, 0, 0.6);
+          padding: 16px 24px;
+          background: var(--glass);
+          backdrop-filter: blur(12px);
+          border-bottom: 1px solid var(--glass-border);
           display: flex;
           justify-content: space-between;
           align-items: center;
-          gap: 12px;
+          gap: 16px;
           font-size: 14px;
           flex-wrap: wrap;
+          position: relative;
+          z-index: 10;
         }
+
         .brand {
           display: flex;
           align-items: center;
-          gap: 8px;
-          font-weight: 600;
+          gap: 12px;
+          font-weight: 700;
+          font-size: 18px;
+          background: linear-gradient(45deg, var(--primary), var(--secondary));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
+
+        .theme-toggle {
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 8px;
+          cursor: pointer;
+          color: var(--text);
+          transition: all 0.2s ease;
+          font-size: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+        }
+
+        .theme-toggle:hover {
+          background: var(--surface-light);
+          transform: translateY(-1px);
+        }
+
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.05); }
+        }
+
         .cid-controls {
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 12px;
           flex-wrap: wrap;
         }
+
+        .cid-controls label {
+          color: var(--text-muted);
+          font-weight: 500;
+        }
+
         #cidInput {
-          padding: 8px 10px;
-          border-radius: 8px;
-          border: 1px solid rgba(255,255,255,0.25);
-          background: rgba(255,255,255,0.08);
-          color: #fff;
+          padding: 10px 14px;
+          border-radius: 12px;
+          border: 1px solid var(--border);
+          background: var(--surface);
+          color: var(--text);
           min-width: 220px;
           outline: none;
+          transition: all 0.2s ease;
+          font-family: ui-monospace, 'SF Mono', monospace;
         }
+
+        #cidInput:focus {
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+          transform: translateY(-1px);
+        }
+
         #setCidBtn {
-          padding: 8px 12px;
+          padding: 10px 16px;
           border: none;
-          border-radius: 8px;
-          background: var(--accent);
+          border-radius: 12px;
+          background: linear-gradient(45deg, var(--primary), var(--secondary));
           color: white;
           cursor: pointer;
           font-weight: 600;
+          transition: all 0.2s ease;
+          position: relative;
+          overflow: hidden;
         }
-        #setCidBtn:hover { background: var(--accent-darker); }
+
+        #setCidBtn:hover {
+          transform: translateY(-2px);
+          box-shadow: var(--glow);
+        }
+
+        #setCidBtn:active {
+          transform: translateY(0);
+        }
 
         .cid-badge {
-          background: rgba(255,255,255,0.1);
-          border: 1px solid rgba(255,255,255,0.18);
-          padding: 6px 10px;
-          border-radius: 999px;
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          background: var(--surface-light);
+          border: 1px solid var(--border);
+          padding: 8px 14px;
+          border-radius: 20px;
+          font-family: ui-monospace, 'SF Mono', monospace;
+          font-size: 12px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .cid-badge::before {
+          content: "🔗";
+          font-size: 14px;
         }
 
         #chat-container {
           flex: 1;
-          padding: 20px;
+          padding: 24px;
           overflow-y: auto;
-        }
-        .chatbox {
           display: flex;
           flex-direction: column;
+          gap: 16px;
+          scroll-behavior: smooth;
         }
+
+        #chat-container::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        #chat-container::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        #chat-container::-webkit-scrollbar-thumb {
+          background: var(--border);
+          border-radius: 3px;
+        }
+
+        #chat-container::-webkit-scrollbar-thumb:hover {
+          background: var(--text-muted);
+        }
+
         .message {
-          max-width: 80%;
-          padding: 12px 16px;
-          border-radius: 12px;
-          margin-bottom: 12px;
-          white-space: pre-wrap; /* preserves \n */
-          line-height: 1.4;
+          max-width: 75%;
+          padding: 16px 20px;
+          border-radius: 20px;
+          margin-bottom: 4px;
+          white-space: pre-wrap;
+          line-height: 1.5;
           word-wrap: break-word;
+          position: relative;
+          animation: messageSlideIn 0.3s ease-out;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
+
+        @keyframes messageSlideIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         .bot {
-          background: rgba(255,255,255,0.1);
+          background: var(--glass);
+          backdrop-filter: blur(12px);
+          border: 1px solid var(--glass-border);
           align-self: flex-start;
-          border: 1px solid rgba(255,255,255,0.15);
+          border-bottom-left-radius: 6px;
         }
+
         .user {
-          background: var(--accent);
+          background: linear-gradient(135deg, var(--primary), var(--secondary));
           align-self: flex-end;
+          border-bottom-right-radius: 6px;
+          color: white;
         }
+
+        .loading-indicator {
+          max-width: 75%;
+          padding: 16px 20px;
+          border-radius: 20px;
+          border-bottom-left-radius: 6px;
+          background: var(--glass);
+          backdrop-filter: blur(12px);
+          border: 1px solid var(--glass-border);
+          align-self: flex-start;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          animation: messageSlideIn 0.3s ease-out;
+        }
+
+        .typing-dots {
+          display: flex;
+          gap: 4px;
+        }
+
+        .typing-dots span {
+          width: 8px;
+          height: 8px;
+          background: var(--primary);
+          border-radius: 50%;
+          animation: typing 1.4s ease-in-out infinite;
+        }
+
+        .typing-dots span:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+
+        .typing-dots span:nth-child(3) {
+          animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+          0%, 60%, 100% {
+            transform: scale(1);
+            opacity: 0.7;
+          }
+          30% {
+            transform: scale(1.2);
+            opacity: 1;
+          }
+        }
+
         #input-container {
           display: flex;
-          padding: 12px;
-          background: rgba(0,0,0,0.7);
-          gap: 8px;
+          padding: 20px 24px;
+          background: var(--glass);
+          backdrop-filter: blur(12px);
+          border-top: 1px solid var(--glass-border);
+          gap: 12px;
+          align-items: flex-end;
         }
+
         #query {
           flex: 1;
-          padding: 10px;
-          border-radius: 8px;
-          border: none;
+          padding: 14px 18px;
+          border-radius: 20px;
+          border: 1px solid var(--border);
+          background: var(--surface);
+          color: var(--text);
+          font-size: 15px;
           outline: none;
-          font-size: 14px;
+          transition: all 0.2s ease;
+          resize: none;
+          min-height: 48px;
+          max-height: 120px;
         }
+
+        #query:focus {
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+          transform: translateY(-2px);
+        }
+
+        #query::placeholder {
+          color: var(--text-muted);
+        }
+
         #sendBtn {
-          padding: 10px 16px;
+          padding: 14px 20px;
           border: none;
-          border-radius: 8px;
-          background: var(--accent);
+          border-radius: 20px;
+          background: linear-gradient(45deg, var(--primary), var(--secondary));
           color: white;
           cursor: pointer;
-          font-weight: bold;
+          font-weight: 600;
+          font-size: 15px;
+          transition: all 0.2s ease;
+          position: relative;
+          overflow: hidden;
+          min-width: 60px;
+          height: 48px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
-        #sendBtn:hover { background: var(--accent-darker); }
 
-        /* Tiny toast */
+        #sendBtn:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: var(--glow);
+        }
+
+        #sendBtn:active {
+          transform: translateY(0);
+        }
+
+        #sendBtn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
+        }
+
+        #sendBtn::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+          transition: left 0.5s ease;
+        }
+
+        #sendBtn:hover::before {
+          left: 100%;
+        }
+
+        /* Toast improvements */
         #toast {
           position: fixed;
-          right: 16px;
-          bottom: 16px;
-          padding: 10px 14px;
-          border-radius: 10px;
-          background: rgba(0,0,0,0.7);
-          border: 1px solid rgba(255,255,255,0.2);
-          font-size: 13px;
+          right: 24px;
+          top: 80px;
+          padding: 12px 18px;
+          border-radius: 12px;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          font-size: 14px;
+          font-weight: 500;
           opacity: 0;
-          transform: translateY(10px);
-          transition: opacity 0.2s ease, transform 0.2s ease;
+          transform: translateY(-20px) scale(0.95);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           pointer-events: none;
+          box-shadow: var(--shadow);
+          z-index: 100;
         }
+
         #toast.show {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateY(0) scale(1);
+        }
+
+        #toast.success {
+          border-color: var(--success);
+          color: var(--success);
+        }
+
+        #toast.error {
+          border-color: var(--error);
+          color: var(--error);
+        }
+
+        /* Empty state */
+        .empty-state {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          text-align: center;
+          gap: 16px;
+          opacity: 0.7;
+        }
+
+        .empty-state-icon {
+          font-size: 48px;
+          margin-bottom: 8px;
+          animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+
+        .empty-state h3 {
+          margin: 0;
+          font-size: 24px;
+          font-weight: 700;
+          background: linear-gradient(45deg, var(--primary), var(--secondary));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .empty-state p {
+          margin: 0;
+          color: var(--text-muted);
+          font-size: 16px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+          header {
+            padding: 12px 16px;
+            flex-direction: column;
+            gap: 12px;
+          }
+
+          .cid-controls {
+            width: 100%;
+            justify-content: center;
+          }
+
+          #cidInput {
+            min-width: 180px;
+          }
+
+          #chat-container {
+            padding: 16px;
+          }
+
+          .message {
+            max-width: 90%;
+          }
+
+          #input-container {
+            padding: 16px;
+          }
+        }
+
+        /* Micro-interactions */
+        button, input {
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .message:hover {
+          transform: translateY(-1px);
+        }
+
+        /* Focus indicators */
+        *:focus-visible {
+          outline: 2px solid var(--primary);
+          outline-offset: 2px;
+        }
+
+        /* Loading spinner for send button */
+        .spinner {
+          width: 20px;
+          height: 20px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-top: 2px solid white;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
 <header>
-    <div class="brand">💬 MCP AI Chat</div>
+    <div class="brand">Let's Chat</div>
     <div class="cid-controls">
+        <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
         <label for="cidInput">Conversation ID:</label>
         <input id="cidInput" type="text" placeholder="Enter conversation ID…" />
         <button id="setCidBtn" title="Set Conversation ID">Set</button>
-        <span class="cid-badge">Current: <strong id="cidDisplay"></strong></span>
+        <span class="cid-badge">
+            <strong id="cidDisplay"></strong>
+        </span>
     </div>
 </header>
 
-<div id="chat-container" class="chatbox"></div>
+<div id="chat-container"></div>
 
 <div id="input-container">
-    <input type="text" id="query" placeholder="Type a message..." />
-    <button id="sendBtn">Send</button>
+    <input type="text" id="query" placeholder="Type your message..." />
+    <button id="sendBtn">
+        <span class="send-text">Send</span>
+    </button>
 </div>
 
 <div id="toast" role="status" aria-live="polite"></div>
@@ -168,14 +547,18 @@
       const url = new URL(window.location.href);
       return url.searchParams.get("cid");
     }
+
     function loadCid() {
       return getCidFromUrl() || localStorage.getItem("chat.cid") || DEFAULT_CID;
     }
+
     function saveCid(value) {
       localStorage.setItem("chat.cid", value);
     }
 
     let currentCid = loadCid();
+    let isLoading = false;
+    let currentTheme = localStorage.getItem('theme') || 'dark';
 
     const cidInput = document.getElementById("cidInput");
     const cidDisplay = document.getElementById("cidDisplay");
@@ -184,11 +567,25 @@
     const queryInput = document.getElementById("query");
     const sendBtn = document.getElementById("sendBtn");
     const toast = document.getElementById("toast");
+    const themeToggle = document.getElementById("themeToggle");
 
-    function showToast(msg) {
+    function initTheme() {
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      themeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+    }
+
+    function toggleTheme() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', currentTheme);
+      initTheme();
+      showToast(`Switched to ${currentTheme} mode`, 'success');
+    }
+
+    function showToast(msg, type = 'default') {
       toast.textContent = msg;
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 1400);
+      toast.className = type === 'success' ? 'success show' :
+                        type === 'error' ? 'error show' : 'show';
+      setTimeout(() => toast.classList.remove('show', 'success', 'error'), 2000);
     }
 
     function renderCid() {
@@ -199,66 +596,137 @@
     function setCid() {
       const next = cidInput.value.trim();
       if (!next) {
-        showToast("CID cannot be empty.");
+        showToast("Session ID cannot be empty.", 'error');
         return;
       }
       currentCid = next;
       saveCid(currentCid);
       renderCid();
-      showToast("Conversation ID set.");
+      showToast("Session ID updated.", 'success');
       queryInput.focus();
     }
 
-    // Initialize CID UI
+    function showEmptyState() {
+      chatContainer.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">💬</div>
+          <h3>Start a conversation</h3>
+          <p>Type a message below to begin chatting with AI</p>
+        </div>
+      `;
+    }
+
+    function addMessage(text, sender) {
+      // Remove empty state if present
+      const emptyState = chatContainer.querySelector('.empty-state');
+      if (emptyState) {
+        emptyState.remove();
+      }
+
+      const div = document.createElement("div");
+      div.className = `message ${sender}`;
+      div.textContent = text;
+      chatContainer.appendChild(div);
+
+      // Smooth scroll to bottom
+      setTimeout(() => {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }, 50);
+    }
+
+    function showLoadingIndicator() {
+      const loadingDiv = document.createElement("div");
+      loadingDiv.className = "loading-indicator";
+      loadingDiv.id = "loading-indicator";
+      loadingDiv.innerHTML = `
+<!--        <span>AI is thinking</span>-->
+        <div class="typing-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      `;
+      chatContainer.appendChild(loadingDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function hideLoadingIndicator() {
+      const loading = document.getElementById("loading-indicator");
+      if (loading) {
+        loading.remove();
+      }
+    }
+
+    function setLoadingState(loading) {
+      isLoading = loading;
+      sendBtn.disabled = loading;
+
+      if (loading) {
+        sendBtn.innerHTML = '<div class="spinner"></div>';
+        showLoadingIndicator();
+      } else {
+        sendBtn.innerHTML = '<span class="send-text">Send</span>';
+        hideLoadingIndicator();
+      }
+    }
+
+    async function sendMessage() {
+      const query = queryInput.value.trim();
+      if (!query || isLoading) return;
+
+      addMessage(query, "user");
+      queryInput.value = "";
+      setLoadingState(true);
+
+      try {
+        const url = `http://localhost:8080/chat?query=${encodeURIComponent(query)}&cid=${encodeURIComponent(currentCid)}`;
+        const res = await fetch(url, { method: "GET" });
+
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+
+        const data = await res.json();
+
+        // Add bot response
+        addMessage(data.message ?? "[No message in response]", "bot");
+
+        // Update CID if server provided one
+        if (data.cid && data.cid !== currentCid) {
+          currentCid = String(data.cid);
+          saveCid(currentCid);
+          renderCid();
+          showToast("Conversation ID updated from server.", 'success');
+        }
+      } catch (err) {
+        addMessage("⚠️ Connection error: " + err.message, "bot");
+        showToast("Failed to send message", 'error');
+      } finally {
+        setLoadingState(false);
+        queryInput.focus();
+      }
+    }
+
+    // Initialize
+    initTheme();
     renderCid();
+    showEmptyState();
+
+    // Event listeners
+    themeToggle.addEventListener("click", toggleTheme);
     setCidBtn.addEventListener("click", setCid);
     cidInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") setCid();
     });
 
-    // -- Chat logic ------------------------------------------------------------
-    function addMessage(text, sender) {
-      const div = document.createElement("div");
-      div.className = `message ${sender}`;
-      // Use textContent to preserve backslashes and show raw text safely
-      div.textContent = text;
-      chatContainer.appendChild(div);
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-
-    async function sendMessage() {
-      const query = queryInput.value.trim();
-      if (!query) return;
-
-      addMessage(query, "user");
-      queryInput.value = "";
-
-      try {
-        const url = `http://localhost:8080/chat?query=${encodeURIComponent(query)}&cid=${encodeURIComponent(currentCid)}`;
-        const res = await fetch(url, { method: "GET" });
-        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-        const data = await res.json();
-
-        // Expecting { cid: string, message: string }
-        // Show server message exactly (preserves \ and \n)
-        addMessage(data.message ?? "[No message in response]", "bot");
-
-        // If backend echoes cid, update badge to reflect any server-side normalization
-        if (data.cid && data.cid !== currentCid) {
-          currentCid = String(data.cid);
-          saveCid(currentCid);
-          renderCid();
-          showToast("CID updated from server.");
-        }
-      } catch (err) {
-        addMessage("⚠️ Error: " + err.message, "bot");
-      }
-    }
-
     sendBtn.addEventListener("click", sendMessage);
     queryInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") sendMessage();
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
     });
+
+    // Auto-focus query input
+    queryInput.focus();
 </script>
 </body>
 </html>
