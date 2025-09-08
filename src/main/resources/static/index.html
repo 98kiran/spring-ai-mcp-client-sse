@@ -1,516 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Chat Interface</title>
     <style>
-        :root {
-          --primary: #6366f1;
-          --primary-hover: #5b21b6;
-          --secondary: #8b5cf6;
-          --background: #0a0a0a;
-          --surface: #111827;
-          --surface-light: #1f2937;
-          --text: #f9fafb;
-          --text-muted: #9ca3af;
-          --border: #374151;
-          --success: #10b981;
-          --warning: #f59e0b;
-          --error: #ef4444;
-          --glass: rgba(255, 255, 255, 0.05);
-          --glass-border: rgba(255, 255, 255, 0.1);
-          --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-          --glow: 0 0 20px rgba(99, 102, 241, 0.3);
+        :root{
+          --primary:#6366f1;--primary-hover:#5b21b6;--secondary:#8b5cf6;
+          --background:#0a0a0a;--surface:#111827;--surface-light:#1f2937;
+          --text:#f9fafb;--text-muted:#9ca3af;--border:#374151;
+          --success:#10b981;--warning:#f59e0b;--error:#ef4444;
+          --glass:rgba(255,255,255,.05);--glass-border:rgba(255,255,255,.1);
+          --shadow:0 25px 50px -12px rgba(0,0,0,.25);--glow:0 0 20px rgba(99,102,241,.3)
         }
-
-        [data-theme="light"] {
-          --background: #f8fafc;
-          --surface: #ffffff;
-          --surface-light: #f1f5f9;
-          --text: #1e293b;
-          --text-muted: #64748b;
-          --border: #e2e8f0;
-          --glass: rgba(255, 255, 255, 0.8);
-          --glass-border: rgba(0, 0, 0, 0.1);
-          --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
-          --glow: 0 0 20px rgba(99, 102, 241, 0.2);
+        [data-theme="light"]{
+          --background:#f8fafc;--surface:#fff;--surface-light:#f1f5f9;
+          --text:#1e293b;--text-muted:#64748b;--border:#e2e8f0;
+          --glass:rgba(255,255,255,.8);--glass-border:rgba(0,0,0,.1);
+          --shadow:0 25px 50px -12px rgba(0,0,0,.1);--glow:0 0 20px rgba(99,102,241,.2)
         }
-
-        [data-theme="light"] body {
+        [data-theme="light"] body{
           background-image:
-            radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
-            radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.03) 0%, transparent 50%);
+            radial-gradient(circle at 25% 25%, rgba(99,102,241,.05) 0%, transparent 50%),
+            radial-gradient(circle at 75% 75%, rgba(139,92,246,.03) 0%, transparent 50%)
         }
-
-        * {
-          box-sizing: border-box;
-        }
-
-        body {
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          background: var(--background);
+        *{box-sizing:border-box}
+        body{
+          margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+          background:var(--background);
           background-image:
-            radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
-          color: var(--text);
-          display: flex;
-          flex-direction: column;
-          height: 100vh;
-          overflow: hidden;
+            radial-gradient(circle at 25% 25%, rgba(99,102,241,.1) 0%, transparent 50%),
+            radial-gradient(circle at 75% 75%, rgba(139,92,246,.08) 0%, transparent 50%);
+          color:var(--text);display:flex;flex-direction:column;height:100vh;overflow:hidden
         }
-
-        header {
-          padding: 16px 24px;
-          background: var(--glass);
-          backdrop-filter: blur(12px);
-          border-bottom: 1px solid var(--glass-border);
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 16px;
-          font-size: 14px;
-          flex-wrap: wrap;
-          position: relative;
-          z-index: 10;
+        header{
+          padding:16px 24px;background:var(--glass);backdrop-filter:blur(12px);
+          border-bottom:1px solid var(--glass-border);display:flex;justify-content:space-between;
+          align-items:center;gap:16px;font-size:14px;flex-wrap:wrap;position:relative;z-index:10
         }
-
-        .brand {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          font-weight: 700;
-          font-size: 18px;
-          background: linear-gradient(45deg, var(--primary), var(--secondary));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+        .brand{
+          display:flex;align-items:center;gap:12px;font-weight:700;font-size:18px;
+          background:linear-gradient(45deg,var(--primary),var(--secondary));
+          -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
         }
-
-        .theme-toggle {
-          background: var(--surface);
-          border: 1px solid var(--border);
-          border-radius: 12px;
-          padding: 8px;
-          cursor: pointer;
-          color: var(--text);
-          transition: all 0.2s ease;
-          font-size: 16px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 40px;
-          height: 40px;
+        .theme-toggle{
+          background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:8px;
+          cursor:pointer;color:var(--text);transition:.2s;font-size:16px;display:flex;align-items:center;
+          justify-content:center;width:40px;height:40px
         }
-
-        .theme-toggle:hover {
-          background: var(--surface-light);
-          transform: translateY(-1px);
+        .theme-toggle:hover{background:var(--surface-light);transform:translateY(-1px)}
+        .cid-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+        .cid-controls label{color:var(--text-muted);font-weight:500}
+        #cidInput{
+          padding:10px 14px;border-radius:12px;border:1px solid var(--border);
+          background:var(--surface);color:var(--text);min-width:220px;outline:none;
+          transition:.2s;font-family:ui-monospace,'SF Mono',monospace
         }
-
-        @keyframes pulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.05); }
+        #cidInput:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.1);transform:translateY(-1px)}
+        #setCidBtn{
+          padding:10px 16px;border:none;border-radius:12px;background:linear-gradient(45deg,var(--primary),var(--secondary));
+          color:#fff;cursor:pointer;font-weight:600;transition:.2s;position:relative;overflow:hidden
         }
-
-        .cid-controls {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          flex-wrap: wrap;
+        #setCidBtn:hover{transform:translateY(-2px);box-shadow:var(--glow)}
+        #setCidBtn:active{transform:translateY(0)}
+        .cid-badge{
+          background:var(--surface-light);border:1px solid var(--border);padding:8px 14px;border-radius:20px;
+          font-family:ui-monospace,'SF Mono',monospace;font-size:12px;display:flex;align-items:center;gap:8px
         }
-
-        .cid-controls label {
-          color: var(--text-muted);
-          font-weight: 500;
+        .cid-badge::before{content:"🔗";font-size:14px}
+        #chat-container{
+          flex:1;padding:24px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;scroll-behavior:smooth
         }
-
-        #cidInput {
-          padding: 10px 14px;
-          border-radius: 12px;
-          border: 1px solid var(--border);
-          background: var(--surface);
-          color: var(--text);
-          min-width: 220px;
-          outline: none;
-          transition: all 0.2s ease;
-          font-family: ui-monospace, 'SF Mono', monospace;
+        #chat-container::-webkit-scrollbar{width:6px}
+        #chat-container::-webkit-scrollbar-track{background:transparent}
+        #chat-container::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+        #chat-container::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}
+        .message{
+          max-width:75%;
+          padding:16px 20px;
+          padding-right:48px;   /* space for timestamp */
+          padding-bottom:28px;  /* space for timestamp */
+          border-radius:20px;margin-bottom:4px;white-space:pre-wrap;
+          line-height:1.5;word-wrap:break-word;position:relative;animation:messageSlideIn .3s ease-out;
+          box-shadow:0 4px 12px rgba(0,0,0,.15)
         }
-
-        #cidInput:focus {
-          border-color: var(--primary);
-          box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-          transform: translateY(-1px);
-        }
-
-        #setCidBtn {
-          padding: 10px 16px;
-          border: none;
-          border-radius: 12px;
-          background: linear-gradient(45deg, var(--primary), var(--secondary));
-          color: white;
-          cursor: pointer;
-          font-weight: 600;
-          transition: all 0.2s ease;
-          position: relative;
-          overflow: hidden;
-        }
-
-        #setCidBtn:hover {
-          transform: translateY(-2px);
-          box-shadow: var(--glow);
-        }
-
-        #setCidBtn:active {
-          transform: translateY(0);
-        }
-
-        .cid-badge {
-          background: var(--surface-light);
-          border: 1px solid var(--border);
-          padding: 8px 14px;
-          border-radius: 20px;
-          font-family: ui-monospace, 'SF Mono', monospace;
-          font-size: 12px;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .cid-badge::before {
-          content: "🔗";
-          font-size: 14px;
-        }
-
-        #chat-container {
-          flex: 1;
-          padding: 24px;
-          overflow-y: auto;
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-          scroll-behavior: smooth;
-        }
-
-        #chat-container::-webkit-scrollbar {
-          width: 6px;
-        }
-
-        #chat-container::-webkit-scrollbar-track {
-          background: transparent;
-        }
-
-        #chat-container::-webkit-scrollbar-thumb {
-          background: var(--border);
-          border-radius: 3px;
-        }
-
-        #chat-container::-webkit-scrollbar-thumb:hover {
-          background: var(--text-muted);
-        }
-
-        .message {
-          max-width: 75%;
-          padding: 16px 20px;
-          border-radius: 20px;
-          margin-bottom: 4px;
-          white-space: pre-wrap;
-          line-height: 1.5;
-          word-wrap: break-word;
-          position: relative;
-          animation: messageSlideIn 0.3s ease-out;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        @keyframes messageSlideIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .bot {
-          background: var(--glass);
-          backdrop-filter: blur(12px);
+        .message img{display:block;margin-top:8px;border-radius:12px;max-width:100%}
+        .timestamp{
+          position:absolute;
+          right:10px;
+          bottom:6px;
+          font-size:11px;
+          color:var(--text-muted);
+          background: rgba(0,0,0,0.15);
           border: 1px solid var(--glass-border);
-          align-self: flex-start;
-          border-bottom-left-radius: 6px;
+          padding: 2px 6px;
+          border-radius: 8px;
+          backdrop-filter: blur(6px);
+          user-select:none;
         }
-
-        .user {
-          background: linear-gradient(135deg, var(--primary), var(--secondary));
-          align-self: flex-end;
-          border-bottom-right-radius: 6px;
-          color: white;
+        [data-theme="light"] .timestamp{
+          background: rgba(255,255,255,0.6);
         }
-
-        .loading-indicator {
-          max-width: 75%;
-          padding: 16px 20px;
-          border-radius: 20px;
-          border-bottom-left-radius: 6px;
-          background: var(--glass);
-          backdrop-filter: blur(12px);
-          border: 1px solid var(--glass-border);
-          align-self: flex-start;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          animation: messageSlideIn 0.3s ease-out;
+        @keyframes messageSlideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .bot{background:var(--glass);backdrop-filter:blur(12px);border:1px solid var(--glass-border);align-self:flex-start;border-bottom-left-radius:6px}
+        .user{background:linear-gradient(135deg,var(--primary),var(--secondary));align-self:flex-end;border-bottom-right-radius:6px;color:#fff}
+        .loading-indicator{
+          max-width:75%;padding:16px 20px;border-radius:20px;border-bottom-left-radius:6px;background:var(--glass);
+          backdrop-filter:blur(12px);border:1px solid var(--glass-border);align-self:flex-start;display:flex;align-items:center;gap:8px;animation:messageSlideIn .3s ease-out
         }
-
-        .typing-dots {
-          display: flex;
-          gap: 4px;
+        .typing-dots{display:flex;gap:4px}
+        .typing-dots span{width:8px;height:8px;background:var(--primary);border-radius:50%;animation:typing 1.4s ease-in-out infinite}
+        .typing-dots span:nth-child(2){animation-delay:.2s}.typing-dots span:nth-child(3){animation-delay:.4s}
+        @keyframes typing{0%,60%,100%{transform:scale(1);opacity:.7}30%{transform:scale(1.2);opacity:1}}
+        #input-container{
+          display:flex;padding:20px 24px;background:var(--glass);backdrop-filter:blur(12px);border-top:1px solid var(--glass-border);
+          gap:12px;align-items:flex-end
         }
-
-        .typing-dots span {
-          width: 8px;
-          height: 8px;
-          background: var(--primary);
-          border-radius: 50%;
-          animation: typing 1.4s ease-in-out infinite;
+        #query{
+          flex:1;padding:14px 18px;border-radius:20px;border:1px solid var(--border);background:var(--surface);
+          color:var(--text);font-size:15px;outline:none;transition:.2s;resize:none;min-height:48px;max-height:120px
         }
-
-        .typing-dots span:nth-child(2) {
-          animation-delay: 0.2s;
+        #query:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.1);transform:translateY(-2px)}
+        #query::placeholder{color:var(--text-muted)}
+        #sendBtn{
+          padding:14px 20px;border:none;border-radius:20px;background:linear-gradient(45deg,var(--primary),var(--secondary));
+          color:#fff;cursor:pointer;font-weight:600;font-size:15px;transition:.2s;position:relative;overflow:hidden;
+          min-width:60px;height:48px;display:flex;align-items:center;justify-content:center
         }
-
-        .typing-dots span:nth-child(3) {
-          animation-delay: 0.4s;
+        #sendBtn:hover:not(:disabled){transform:translateY(-2px);box-shadow:var(--glow)}
+        #sendBtn:active{transform:translateY(0)}
+        #sendBtn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+        #sendBtn::before{
+          content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;
+          background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transition:left .5s ease
         }
-
-        @keyframes typing {
-          0%, 60%, 100% {
-            transform: scale(1);
-            opacity: 0.7;
-          }
-          30% {
-            transform: scale(1.2);
-            opacity: 1;
-          }
+        #sendBtn:hover::before{left:100%}
+        #toast{
+          position:fixed;right:24px;top:80px;padding:12px 18px;border-radius:12px;background:var(--surface);
+          border:1px solid var(--border);font-size:14px;font-weight:500;opacity:0;transform:translateY(-20px) scale(.95);
+          transition:all .3s cubic-bezier(.4,0,.2,1);pointer-events:none;box-shadow:var(--shadow);z-index:100
         }
-
-        #input-container {
-          display: flex;
-          padding: 20px 24px;
-          background: var(--glass);
-          backdrop-filter: blur(12px);
-          border-top: 1px solid var(--glass-border);
-          gap: 12px;
-          align-items: flex-end;
+        #toast.show{opacity:1;transform:translateY(0) scale(1)}
+        #toast.success{border-color:var(--success);color:var(--success)}
+        #toast.error{border-color:var(--error);color:var(--error)}
+        .empty-state{
+          display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;
+          text-align:center;gap:16px;opacity:.7
         }
-
-        #query {
-          flex: 1;
-          padding: 14px 18px;
-          border-radius: 20px;
-          border: 1px solid var(--border);
-          background: var(--surface);
-          color: var(--text);
-          font-size: 15px;
-          outline: none;
-          transition: all 0.2s ease;
-          resize: none;
-          min-height: 48px;
-          max-height: 120px;
+        .empty-state-icon{font-size:48px;margin-bottom:8px;animation:float 3s ease-in-out infinite}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        .empty-state h3{margin:0;font-size:24px;font-weight:700;background:linear-gradient(45deg,var(--primary),var(--secondary));
+          -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .empty-state p{margin:0;color:var(--text-muted);font-size:16px}
+        @media (max-width:768px){
+          header{padding:12px 16px;flex-direction:column;gap:12px}
+          .cid-controls{width:100%;justify-content:center}
+          #cidInput{min-width:180px}
+          #chat-container{padding:16px}
+          .message{max-width:90%}
+          #input-container{padding:16px}
         }
-
-        #query:focus {
-          border-color: var(--primary);
-          box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-          transform: translateY(-2px);
+        button,input{transition:all .2s cubic-bezier(.4,0,.2,1)}
+        .message:hover{transform:translateY(-1px)}
+        *:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+        .spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,.3);border-top:2px solid #fff;border-radius:50%;animation:spin 1s linear infinite}
+        @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+        .img-actions{display:flex;gap:8px;margin-top:8px}
+        .btn{
+          display:inline-flex;align-items:center;gap:6px;background:var(--surface-light);border:1px solid var(--border);
+          padding:8px 12px;border-radius:10px;color:var(--text);text-decoration:none;font-size:13px
         }
-
-        #query::placeholder {
-          color: var(--text-muted);
-        }
-
-        #sendBtn {
-          padding: 14px 20px;
-          border: none;
-          border-radius: 20px;
-          background: linear-gradient(45deg, var(--primary), var(--secondary));
-          color: white;
-          cursor: pointer;
-          font-weight: 600;
-          font-size: 15px;
-          transition: all 0.2s ease;
-          position: relative;
+        .btn:hover{background:var(--surface)}
+        .image-msg{ padding:12px; }
+        .image-card{
+          width: clamp(160px, 38vw, 320px);
+          aspect-ratio: 1 / 1;
+          border-radius: 14px;
           overflow: hidden;
-          min-width: 60px;
-          height: 48px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          background: var(--surface-light);
+          border: 1px solid var(--glass-border);
+          box-shadow: 0 6px 18px rgba(0,0,0,.15);
         }
-
-        #sendBtn:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: var(--glow);
-        }
-
-        #sendBtn:active {
-          transform: translateY(0);
-        }
-
-        #sendBtn:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-          transform: none;
-        }
-
-        #sendBtn::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: -100%;
+        .image-card img{
           width: 100%;
           height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-          transition: left 0.5s ease;
-        }
-
-        #sendBtn:hover::before {
-          left: 100%;
-        }
-
-        /* Toast improvements */
-        #toast {
-          position: fixed;
-          right: 24px;
-          top: 80px;
-          padding: 12px 18px;
-          border-radius: 12px;
-          background: var(--surface);
-          border: 1px solid var(--border);
-          font-size: 14px;
-          font-weight: 500;
-          opacity: 0;
-          transform: translateY(-20px) scale(0.95);
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          pointer-events: none;
-          box-shadow: var(--shadow);
-          z-index: 100;
-        }
-
-        #toast.show {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
-
-        #toast.success {
-          border-color: var(--success);
-          color: var(--success);
-        }
-
-        #toast.error {
-          border-color: var(--error);
-          color: var(--error);
-        }
-
-        /* Empty state */
-        .empty-state {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          text-align: center;
-          gap: 16px;
-          opacity: 0.7;
-        }
-
-        .empty-state-icon {
-          font-size: 48px;
-          margin-bottom: 8px;
-          animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-        }
-
-        .empty-state h3 {
-          margin: 0;
-          font-size: 24px;
-          font-weight: 700;
-          background: linear-gradient(45deg, var(--primary), var(--secondary));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-
-        .empty-state p {
-          margin: 0;
-          color: var(--text-muted);
-          font-size: 16px;
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-          header {
-            padding: 12px 16px;
-            flex-direction: column;
-            gap: 12px;
-          }
-
-          .cid-controls {
-            width: 100%;
-            justify-content: center;
-          }
-
-          #cidInput {
-            min-width: 180px;
-          }
-
-          #chat-container {
-            padding: 16px;
-          }
-
-          .message {
-            max-width: 90%;
-          }
-
-          #input-container {
-            padding: 16px;
-          }
-        }
-
-        /* Micro-interactions */
-        button, input {
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .message:hover {
-          transform: translateY(-1px);
-        }
-
-        /* Focus indicators */
-        *:focus-visible {
-          outline: 2px solid var(--primary);
-          outline-offset: 2px;
-        }
-
-        /* Loading spinner for send button */
-        .spinner {
-          width: 20px;
-          height: 20px;
-          border: 2px solid rgba(255, 255, 255, 0.3);
-          border-top: 2px solid white;
-          border-radius: 50%;
-          animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+          object-fit: cover;
+          display: block;
         }
     </style>
 </head>
@@ -520,46 +195,33 @@
     <div class="cid-controls">
         <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
         <label for="cidInput">Conversation ID:</label>
-        <input id="cidInput" type="text" placeholder="Enter conversation ID…" />
+        <input id="cidInput" type="text" placeholder="Enter conversation ID…"/>
         <button id="setCidBtn" title="Set Conversation ID">Set</button>
-        <span class="cid-badge">
-            <strong id="cidDisplay"></strong>
-        </span>
+        <span class="cid-badge"><strong id="cidDisplay"></strong></span>
     </div>
 </header>
 
 <div id="chat-container"></div>
 
 <div id="input-container">
-    <input type="text" id="query" placeholder="Type your message..." />
-    <button id="sendBtn">
-        <span class="send-text">Send</span>
-    </button>
+    <input type="text" id="query" placeholder="Type your message..."/>
+    <button id="sendBtn"><span class="send-text">Send</span></button>
 </div>
 
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script>
-    // -- Conversation ID state/persistence ------------------------------------
+    // ====== CONFIG ======
+    const CHAT_ENDPOINT = "http://localhost:8080/chat";
+    const TIME_ENDPOINT = "http://localhost:8080/time"; // change if your time endpoint differs
     const DEFAULT_CID = "123-test-id2";
 
-    function getCidFromUrl() {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("cid");
-    }
-
-    function loadCid() {
-      return getCidFromUrl() || localStorage.getItem("chat.cid") || DEFAULT_CID;
-    }
-
-    function saveCid(value) {
-      localStorage.setItem("chat.cid", value);
-    }
-
+    // ====== STATE ======
     let currentCid = loadCid();
     let isLoading = false;
     let currentTheme = localStorage.getItem('theme') || 'dark';
 
+    // ====== DOM ======
     const cidInput = document.getElementById("cidInput");
     const cidDisplay = document.getElementById("cidDisplay");
     const setCidBtn = document.getElementById("setCidBtn");
@@ -569,164 +231,291 @@
     const toast = document.getElementById("toast");
     const themeToggle = document.getElementById("themeToggle");
 
-    function initTheme() {
+    // ====== UTIL ======
+    function getCidFromUrl(){
+      try{ return new URL(window.location.href).searchParams.get("cid"); }catch{ return null; }
+    }
+    function loadCid(){ return getCidFromUrl() || localStorage.getItem("chat.cid") || DEFAULT_CID; }
+    function saveCid(v){ localStorage.setItem("chat.cid", v); }
+    function initTheme(){
       document.documentElement.setAttribute('data-theme', currentTheme);
       themeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
     }
-
-    function toggleTheme() {
+    function toggleTheme(){
       currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
       localStorage.setItem('theme', currentTheme);
       initTheme();
       showToast(`Switched to ${currentTheme} mode`, 'success');
     }
-
-    function showToast(msg, type = 'default') {
+    function showToast(msg, type='default'){
       toast.textContent = msg;
-      toast.className = type === 'success' ? 'success show' :
-                        type === 'error' ? 'error show' : 'show';
-      setTimeout(() => toast.classList.remove('show', 'success', 'error'), 2000);
+      toast.className = type === 'success' ? 'success show' : (type === 'error' ? 'error show' : 'show');
+      setTimeout(()=> toast.classList.remove('show','success','error'), 2000);
     }
-
-    function renderCid() {
-      cidDisplay.textContent = currentCid;
-      cidInput.value = currentCid;
-    }
-
-    function setCid() {
+    function renderCid(){ cidDisplay.textContent = currentCid; cidInput.value = currentCid; }
+    function setCid(){
       const next = cidInput.value.trim();
-      if (!next) {
-        showToast("Session ID cannot be empty.", 'error');
-        return;
-      }
-      currentCid = next;
-      saveCid(currentCid);
-      renderCid();
-      showToast("Session ID updated.", 'success');
-      queryInput.focus();
+      if(!next) return showToast("Session ID cannot be empty.", 'error');
+      currentCid = next; saveCid(currentCid); renderCid(); showToast("Session ID updated.", 'success'); queryInput.focus();
     }
 
-    function showEmptyState() {
+    function showEmptyState(){
       chatContainer.innerHTML = `
         <div class="empty-state">
           <div class="empty-state-icon">💬</div>
           <h3>Start a conversation</h3>
           <p>Type a message below to begin chatting with AI</p>
-        </div>
-      `;
+        </div>`;
     }
 
-    function addMessage(text, sender) {
-      // Remove empty state if present
-      const emptyState = chatContainer.querySelector('.empty-state');
-      if (emptyState) {
-        emptyState.remove();
+    // --- Server time (HH:mm) ---
+    async function fetchServerTimeHHmm(){
+      try{
+        const r = await fetch(TIME_ENDPOINT, { method: "GET" });
+        if(!r.ok) throw new Error("time not ok");
+        const j = await r.json();             // expect { time: "2025-09-07T22:03:00Z" } or similar
+        const d = new Date(j.time || j.now || j.date || Date.now());
+        return formatHHmm(d);
+      }catch{
+        // graceful fallback to local time
+        return formatHHmm(new Date());
       }
+    }
+    function formatHHmm(d){
+      const hh = String(d.getHours()).padStart(2,'0');
+      const mm = String(d.getMinutes()).padStart(2,'0');
+      return `${hh}:${mm}`;
+    }
+    function stamp(div, hhmm){
+      const t = document.createElement('span');
+      t.className = 'timestamp';
+      t.textContent = hhmm;
+      div.appendChild(t);
+    }
+
+    // --- Extract images from message text (fallback if server didn't separate images) ---
+    function extractImagesFromText(text) {
+      if (!text) return { cleaned: "", images: [] };
+      let working = String(text);
+      const images = [];
+
+      // 1) Markdown images: ![alt](url)
+      working = working.replace(/!\[[^\]]*]\(([^)\s]+)\)/gi, (_, url) => {
+        if (url) images.push(url);
+        return "";
+      });
+
+      // 2) Plain inline image URLs (allow query params)
+      working = working.replace(/https?:\/\/\S+\.(?:png|jpe?g|gif|webp)(?:\?\S*)?/gi, (url) => {
+        if (url) images.push(url);
+        return "";
+      });
+
+      // 3) data URI
+      working = working.replace(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/gi, (uri) => {
+        if (uri) images.push(uri);
+        return "";
+      });
+
+      const cleaned = working.trim();
+      return { cleaned: cleaned || "Here you go!", images };
+    }
+
+    // --- Messages ---
+    async function addMessage(text, sender){
+      const emptyState = chatContainer.querySelector('.empty-state');
+      if (emptyState) emptyState.remove();
 
       const div = document.createElement("div");
       div.className = `message ${sender}`;
       div.textContent = text;
-      chatContainer.appendChild(div);
 
-      // Smooth scroll to bottom
-      setTimeout(() => {
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-      }, 50);
+      chatContainer.appendChild(div);
+      stamp(div, await fetchServerTimeHHmm());
+      setTimeout(()=> chatContainer.scrollTop = chatContainer.scrollHeight, 30);
     }
 
-    function showLoadingIndicator() {
+    // Convert data URI to object URL (for heavy base64 images)
+    function dataUriToObjectUrl(dataUri){
+      try{
+        const comma = dataUri.indexOf(',');
+        if (comma === -1) return null;
+        const header = dataUri.substring(0, comma);
+        const base64 = dataUri.substring(comma + 1);
+        const mimeMatch = header.match(/^data:([^;]+);base64$/i);
+        const mime = mimeMatch ? mimeMatch[1] : 'application/octet-stream';
+        const byteChars = atob(base64);
+        const bytes = new Uint8Array(byteChars.length);
+        for (let i=0;i<byteChars.length;i++) bytes[i] = byteChars.charCodeAt(i);
+        const blob = new Blob([bytes], { type: mime });
+        return URL.createObjectURL(blob);
+      }catch(e){
+        console.error('dataUriToObjectUrl failed', e);
+        return null;
+      }
+    }
+
+    // Adds: "Here's the image:" + image bubble with anchor + download button
+    async function addImageMessage(src){
+      if(!src) return;
+      // text line before the image
+      await addMessage("Here’s the image:", "bot");
+
+      const emptyState = chatContainer.querySelector('.empty-state');
+      if (emptyState) emptyState.remove();
+
+      const wrap = document.createElement('div');
+      wrap.className = 'message bot image-msg';
+
+      // normalize src (support data:image/*)
+      let usedObjectUrl = null;
+      let srcToUse = src;
+      if (typeof src === 'string' && src.startsWith('data:image')) {
+        const url = dataUriToObjectUrl(src);
+        if (url){ usedObjectUrl = url; srcToUse = url; }
+      }
+
+      // clickable image (opens new tab)
+      const link = document.createElement('a');
+      link.href = srcToUse;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+
+      const img = document.createElement('img');
+      img.alt = 'Generated image';
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.src = srcToUse;
+
+      img.onload = () => {
+        if (usedObjectUrl) URL.revokeObjectURL(usedObjectUrl);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      };
+      img.onerror = () => {
+        const fallback = document.createElement('div');
+        fallback.style.marginTop = '8px';
+        fallback.textContent = 'Image failed to load. ';
+        const a = document.createElement('a');
+        a.textContent = 'Download';
+        a.href = srcToUse;
+        a.download = 'generated-image.png';
+        fallback.appendChild(a);
+        wrap.appendChild(fallback);
+      };
+
+      const card = document.createElement('div');
+      card.className = 'image-card';
+      link.appendChild(img);
+      card.appendChild(link);
+      wrap.appendChild(card);
+
+      // actions (download)
+      const actions = document.createElement('div');
+      actions.className = 'img-actions';
+      const dl = document.createElement('a');
+      dl.className = 'btn';
+      dl.href = srcToUse;
+      dl.download = 'generated-image.png';
+      dl.textContent = 'Download';
+      actions.appendChild(dl);
+      wrap.appendChild(actions);
+
+      chatContainer.appendChild(wrap);
+      stamp(wrap, await fetchServerTimeHHmm());
+      setTimeout(()=> chatContainer.scrollTop = chatContainer.scrollHeight, 30);
+    }
+
+    function showLoadingIndicator(){
       const loadingDiv = document.createElement("div");
       loadingDiv.className = "loading-indicator";
       loadingDiv.id = "loading-indicator";
-      loadingDiv.innerHTML = `
-<!--        <span>AI is thinking</span>-->
-        <div class="typing-dots">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      `;
+      loadingDiv.innerHTML = `<div class="typing-dots"><span></span><span></span><span></span></div>`;
       chatContainer.appendChild(loadingDiv);
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
-
-    function hideLoadingIndicator() {
+    function hideLoadingIndicator(){
       const loading = document.getElementById("loading-indicator");
-      if (loading) {
-        loading.remove();
-      }
+      if (loading) loading.remove();
     }
-
-    function setLoadingState(loading) {
+    function setLoadingState(loading){
       isLoading = loading;
       sendBtn.disabled = loading;
-
-      if (loading) {
-        sendBtn.innerHTML = '<div class="spinner"></div>';
-        showLoadingIndicator();
-      } else {
-        sendBtn.innerHTML = '<span class="send-text">Send</span>';
-        hideLoadingIndicator();
-      }
+      if (loading){ sendBtn.innerHTML = '<div class="spinner"></div>'; showLoadingIndicator(); }
+      else { sendBtn.innerHTML = '<span class="send-text">Send</span>'; hideLoadingIndicator(); }
     }
 
-    async function sendMessage() {
+    async function sendMessage(){
       const query = queryInput.value.trim();
       if (!query || isLoading) return;
 
-      addMessage(query, "user");
+      await addMessage(query, "user");
       queryInput.value = "";
       setLoadingState(true);
 
-      try {
-        const url = `http://localhost:8080/chat?query=${encodeURIComponent(query)}&cid=${encodeURIComponent(currentCid)}`;
-        const res = await fetch(url, { method: "GET" });
+      try{
+        const ctrl = new AbortController();
+        const timeoutId = setTimeout(()=> ctrl.abort(), 60000);
+
+        const url = `${CHAT_ENDPOINT}?query=${encodeURIComponent(query)}&cid=${encodeURIComponent(currentCid)}`;
+        const res = await fetch(url, { method:"GET", signal: ctrl.signal });
+        clearTimeout(timeoutId);
 
         if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
 
         const data = await res.json();
 
-        // Add bot response
-        addMessage(data.message ?? "[No message in response]", "bot");
+        // Collect images from explicit fields first
+        const allImages = [];
+        if (data.image) allImages.push(data.image);
+        if (Array.isArray(data.images)) allImages.push(...data.images);
 
-        // Update CID if server provided one
-        if (data.cid && data.cid !== currentCid) {
-          currentCid = String(data.cid);
-          saveCid(currentCid);
-          renderCid();
-          showToast("Conversation ID updated from server.", 'success');
+        // Fallback: also parse images out of the message text (Markdown/URLs/data URIs)
+        const initialText = data.message ?? "[No message in response]";
+        const { cleaned, images } = extractImagesFromText(initialText);
+        allImages.push(...images);
+
+        // Show cleaned text first
+        await addMessage(cleaned, "bot");
+
+        // Then render images as separate, clickable/downloadable bubbles
+        for (const src of allImages) {
+          if (src) await addImageMessage(src);
         }
-      } catch (err) {
-        addMessage("⚠️ Connection error: " + err.message, "bot");
-        showToast("Failed to send message", 'error');
-      } finally {
+
+        if (data.cid && data.cid !== currentCid){
+          currentCid = String(data.cid);
+          localStorage.setItem("chat.cid", currentCid);
+          renderCid();
+          showToast("Conversation ID updated from server.", "success");
+        }
+      }catch(err){
+        const msg = err.name === 'AbortError'
+          ? "⚠️ Request timed out. Please try again."
+          : "⚠️ Connection error: " + err.message;
+        await addMessage(msg, "bot");
+        showToast("Failed to send message", "error");
+      }finally{
         setLoadingState(false);
         queryInput.focus();
       }
     }
 
-    // Initialize
-    initTheme();
-    renderCid();
-    showEmptyState();
+    // ====== INIT ======
+    function init(){
+      initTheme();
+      renderCid();
+      showEmptyState();
 
-    // Event listeners
-    themeToggle.addEventListener("click", toggleTheme);
-    setCidBtn.addEventListener("click", setCid);
-    cidInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") setCid();
-    });
-
-    sendBtn.addEventListener("click", sendMessage);
-    queryInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
-    });
-
-    // Auto-focus query input
-    queryInput.focus();
+      themeToggle.addEventListener("click", toggleTheme);
+      setCidBtn.addEventListener("click", setCid);
+      cidInput.addEventListener("keydown", (e)=> { if (e.key === "Enter") setCid(); });
+      sendBtn.addEventListener("click", sendMessage);
+      queryInput.addEventListener("keydown", (e)=>{
+        if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); sendMessage(); }
+      });
+      queryInput.focus();
+    }
+    init();
 </script>
 </body>
 </html>
