@@ -84,6 +84,10 @@ public class ChatController {
             "(?i)\\b(search|look\\s*up|find|brave|latest|news|results|articles?)\\b");
     private static final Pattern IMAGEY = Pattern.compile(
             "(?i)\\b(image|picture|photo|draw|create|generate|illustration)\\b");
+    private static final Pattern FILE_UPLOAD = Pattern.compile(
+            "(?i)\\b(uploaded|process|file|document)\\b");
+    private static final Pattern DOCUMENT_QUERY = Pattern.compile(
+            "(?i)\\b(what|tell|show|find|search|list|documents?|files?|about|from|in the|according to)\\b");
 
     /**
      * Regex to capture inline base64 image data URIs.  The assistant is instructed to embed
@@ -112,7 +116,9 @@ public class ChatController {
                 || TICKERISH.matcher(s).matches()
                 || SEARCHY.matcher(s).find()
                 || DATE_TIME.matcher(s).find()
-                || IMAGEY.matcher(s).find();
+                || IMAGEY.matcher(s).find()
+                || FILE_UPLOAD.matcher(s).find()
+                || DOCUMENT_QUERY.matcher(s).find();
     }
 
     /**
